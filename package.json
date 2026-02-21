@@ -1,0 +1,24 @@
+{
+  "name": "versionkit",
+  "version": "0.1.0",
+  "description": "Framework-agnostic API versioning with RFC 8594 Sunset and RFC 9745 Deprecation headers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/tests/*.test.js",
+    "pretest": "tsc"
+  },
+  "keywords": [
+    "api-versioning",
+    "versioning",
+    "deprecation",
+    "sunset",
+    "rfc-8594",
+    "rfc-9745"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
