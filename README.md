@@ -5,6 +5,7 @@
 <p align="center"><strong>Framework-agnostic API versioning with RFC 8594 Sunset and RFC 9745 Deprecation headers</strong></p>
 
 <p align="center">
+  <a href="https://github.com/mstuart/versionkit/actions/workflows/ci.yml"><img src="https://github.com/mstuart/versionkit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://www.npmjs.com/package/versionkit"><img src="https://img.shields.io/npm/v/versionkit?label=npm" alt="npm"></a>
 </p>
 
