@@ -1,5 +1,14 @@
-# versionkit
+<div align="center">
+  <img src="docs/assets/logo.svg" alt="versionkit — Framework-agnostic API versioning with RFC 8594 Sunset and RFC 9745 Deprecation headers" width="720">
+</div>
 
+<p align="center"><strong>Framework-agnostic API versioning with RFC 8594 Sunset and RFC 9745 Deprecation headers</strong></p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/versionkit"><img src="https://img.shields.io/npm/v/versionkit?label=npm" alt="npm"></a>
+</p>
+
+---
 Framework-agnostic API versioning with full RFC compliance.
 
 Supports RFC 8594 (Sunset header), RFC 9745 (Deprecation header), and three version extraction strategies. Works with Hono, Fastify, Express, and any framework using Web Standards Request/Response.
