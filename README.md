@@ -7,6 +7,8 @@
 <p align="center">
   <a href="https://github.com/mstuart/versionkit/actions/workflows/ci.yml"><img src="https://github.com/mstuart/versionkit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://www.npmjs.com/package/versionkit"><img src="https://img.shields.io/npm/v/versionkit?label=npm" alt="npm"></a>
+  <a href="https://deepwiki.com/mstuart/versionkit"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+  <a href="https://socket.dev/npm/package/versionkit"><img src="https://socket.dev/api/badge/npm/package/versionkit" alt="Socket"></a>
 </p>
 
 ---
