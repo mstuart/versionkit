@@ -6,6 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
     "test": "node --test dist/tests/*.test.js",
     "pretest": "tsc"
   },
@@ -19,7 +21,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "2.5.6",
     "@types/node": "^22.20.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ultracite": "7.10.2"
   }
 }
