@@ -1,13 +1,17 @@
-import type { VersionStrategy, DeprecationConfig, RequestHandler } from './types.js';
-import { extractFromHeader } from './strategies/header.js';
-import { extractFromUrl } from './strategies/url.js';
-import { extractFromAccept } from './strategies/accept.js';
-import { applyDeprecationHeaders } from './deprecation.js';
+import { applyDeprecationHeaders } from "./deprecation.js";
+import { extractFromAccept } from "./strategies/accept.js";
+import { extractFromHeader } from "./strategies/header.js";
+import { extractFromUrl } from "./strategies/url.js";
+import type {
+  DeprecationConfig,
+  RequestHandler,
+  VersionStrategy,
+} from "./types.js";
 
 export interface VersionRouterOptions {
-  strategy: VersionStrategy;
-  headerName?: string;
   defaultVersion?: string;
+  headerName?: string;
+  strategy: VersionStrategy;
   versions: {
     [version: string]: {
       deprecated?: boolean;
@@ -17,8 +21,8 @@ export interface VersionRouterOptions {
 }
 
 export class VersionRouter {
-  private handlers = new Map<string, RequestHandler>();
-  private opts: VersionRouterOptions;
+  private readonly handlers = new Map<string, RequestHandler>();
+  private readonly opts: VersionRouterOptions;
 
   constructor(opts: VersionRouterOptions) {
     this.opts = opts;
@@ -33,15 +37,17 @@ export class VersionRouter {
     let version: string | null = null;
 
     switch (this.opts.strategy) {
-      case 'header':
-        version = extractFromHeader(req, this.opts.headerName ?? 'Api-Version');
+      case "header":
+        version = extractFromHeader(req, this.opts.headerName ?? "Api-Version");
         break;
-      case 'url':
+      case "url":
         version = extractFromUrl(req);
         break;
-      case 'accept':
+      case "accept":
         version = extractFromAccept(req);
         break;
+      default:
+        return null;
     }
 
     if (!version && this.opts.defaultVersion) {
@@ -56,18 +62,24 @@ export class VersionRouter {
       const version = this.resolveVersion(req);
 
       if (!version) {
-        return new Response(JSON.stringify({ error: 'API version is required' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+          JSON.stringify({ error: "API version is required" }),
+          {
+            headers: { "Content-Type": "application/json" },
+            status: 400,
+          }
+        );
       }
 
       const handler = this.handlers.get(version);
       if (!handler) {
-        return new Response(JSON.stringify({ error: `Unsupported API version: ${version}` }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+          JSON.stringify({ error: `Unsupported API version: ${version}` }),
+          {
+            headers: { "Content-Type": "application/json" },
+            status: 400,
+          }
+        );
       }
 
       const response = await handler(req);
@@ -77,9 +89,9 @@ export class VersionRouter {
         const headers = new Headers(response.headers);
         applyDeprecationHeaders(headers, versionConfig.deprecation);
         return new Response(response.body, {
+          headers,
           status: response.status,
           statusText: response.statusText,
-          headers,
         });
       }
 
