@@ -11,14 +11,17 @@
     "rfc-9745"
   ],
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src"
+  ],
   "scripts": {
     "build": "tsc",
     "check": "ultracite check",
     "fix": "ultracite fix",
     "pretest": "tsc",
-    "test": "node --test dist/tests/*.test.js"
+    "test": "node --test dist/tests/*.test.js tests/package-artifact.test.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.6",
