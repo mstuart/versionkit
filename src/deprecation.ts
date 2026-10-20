@@ -19,6 +19,6 @@ export function applyDeprecationHeaders(
 
   // RFC 8594: Link header
   if (config.link) {
-    headers.set("Link", `<${config.link}>; rel="deprecation"`);
+    headers.append("Link", `<${config.link}>; rel="deprecation"`);
   }
 }

@@ -85,9 +85,9 @@ export class VersionRouter {
       const response = await handler(req);
 
       const versionConfig = this.opts.versions[version];
-      if (versionConfig?.deprecated && versionConfig.deprecation) {
+      if (versionConfig?.deprecated) {
         const headers = new Headers(response.headers);
-        applyDeprecationHeaders(headers, versionConfig.deprecation);
+        applyDeprecationHeaders(headers, versionConfig.deprecation ?? {});
         return new Response(response.body, {
           headers,
           status: response.status,
