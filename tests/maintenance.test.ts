@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { it } from "node:test";
 import { createVersionRouter } from "../src/router.js";
 
-it("marks deprecated versions when optional deprecation details are absent", async () => {
+it("marks deprecated versions when optional deprecation details are absent", async (t) => {
+  t.mock.timers.enable({
+    apis: ["Date"],
+    now: new Date("2025-01-01T00:00:00Z"),
+  });
   const router = createVersionRouter({
     strategy: "header",
     versions: { "1": { deprecated: true } },
@@ -11,7 +15,7 @@ it("marks deprecated versions when optional deprecation details are absent", asy
   const response = await router.middleware()(
     new Request("https://example.com", { headers: { "Api-Version": "1" } })
   );
-  assert.equal(response.headers.get("Deprecation"), "true");
+  assert.equal(response.headers.get("Deprecation"), "@1735689600");
   assert.equal(response.status, 202);
   assert.equal(await response.text(), "old API");
 });
@@ -35,4 +39,18 @@ it("keeps handler pagination links when adding deprecation documentation", async
     response.headers.get("Link"),
     `${next}, <https://example.com/migration>; rel="deprecation"`
   );
+});
+
+it("preserves status-zero responses when deprecation details are omitted", async () => {
+  const router = createVersionRouter({
+    strategy: "header",
+    versions: { "1": { deprecated: true } },
+  });
+  const response = Response.error();
+  router.handle("1", () => response);
+  const result = await router.middleware()(
+    new Request("https://example.com", { headers: { "Api-Version": "1" } })
+  );
+  assert.equal(result, response);
+  assert.equal(result.status, 0);
 });

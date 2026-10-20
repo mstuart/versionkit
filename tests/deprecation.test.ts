@@ -20,11 +20,15 @@ describe("applyDeprecationHeaders", () => {
     assert.equal(headers.get("Deprecation"), "@1735689600");
   });
 
-  it("injects Deprecation: true when no date specified", () => {
+  it("injects the current date when no deprecation date is specified", (t) => {
+    t.mock.timers.enable({
+      apis: ["Date"],
+      now: new Date("2025-01-01T00:00:00Z"),
+    });
     const headers = new Headers();
     applyDeprecationHeaders(headers, {});
 
-    assert.equal(headers.get("Deprecation"), "true");
+    assert.equal(headers.get("Deprecation"), "@1735689600");
   });
 
   it('injects Link header with rel="deprecation" (RFC 8594)', () => {
