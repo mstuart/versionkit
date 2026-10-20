@@ -124,7 +124,7 @@ When `deprecatedSince` is set:
 Deprecation: @1735689600
 ```
 
-When no date is specified but the version is deprecated, the response time is used as the effective deprecation date in the same `@<Unix timestamp>` format. Set `deprecatedSince` to announce a fixed date. Status-zero responses (such as `Response.error()` or opaque browser responses) pass through unchanged because they cannot be reconstructed with additional headers.
+When no date is specified but the version is deprecated, the earlier of response time and the configured Sunset is used as the effective deprecation date in the same `@<Unix timestamp>` format. Set `deprecatedSince` to announce a fixed date. Status-zero responses (such as `Response.error()` or opaque browser responses) and runtime WebSocket upgrade responses pass through unchanged because the standard Response constructor cannot reconstruct them.
 
 ## Framework Integration
 

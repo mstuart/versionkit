@@ -54,3 +54,22 @@ it("preserves status-zero responses when deprecation details are omitted", async
   assert.equal(result, response);
   assert.equal(result.status, 0);
 });
+
+it("passes through runtime WebSocket upgrade responses with their extension", async () => {
+  const router = createVersionRouter({
+    strategy: "header",
+    versions: { "1": { deprecated: true } },
+  });
+  const socket = {};
+  const response = new Response(null);
+  Object.defineProperties(response, {
+    status: { value: 101 },
+    webSocket: { value: socket },
+  });
+  router.handle("1", () => response);
+  const result = await router.middleware()(
+    new Request("https://example.com", { headers: { "Api-Version": "1" } })
+  );
+  assert.equal(result, response);
+  assert.equal(Reflect.get(result, "webSocket"), socket);
+});

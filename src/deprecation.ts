@@ -10,8 +10,10 @@ export function applyDeprecationHeaders(
   }
 
   // RFC 9745: Deprecation header (Unix timestamp)
-  const deprecatedSince = config.deprecatedSince ?? new Date();
-  const timestamp = Math.floor(deprecatedSince.getTime() / 1000);
+  const deprecatedAt =
+    config.deprecatedSince?.getTime() ??
+    Math.min(Date.now(), config.sunset?.getTime() ?? Number.POSITIVE_INFINITY);
+  const timestamp = Math.floor(deprecatedAt / 1000);
   headers.set("Deprecation", `@${timestamp}`);
 
   // RFC 8594: Link header
