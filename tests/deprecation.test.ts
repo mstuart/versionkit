@@ -20,11 +20,15 @@ describe("applyDeprecationHeaders", () => {
     assert.equal(headers.get("Deprecation"), "@1735689600");
   });
 
-  it("injects Deprecation: true when no date specified", () => {
+  it("injects the current date when no deprecation date is specified", (t) => {
+    t.mock.timers.enable({
+      apis: ["Date"],
+      now: new Date("2025-01-01T00:00:00Z"),
+    });
     const headers = new Headers();
     applyDeprecationHeaders(headers, {});
 
-    assert.equal(headers.get("Deprecation"), "true");
+    assert.equal(headers.get("Deprecation"), "@1735689600");
   });
 
   it('injects Link header with rel="deprecation" (RFC 8594)', () => {
@@ -114,4 +118,31 @@ describe("VersionRouter deprecation integration", () => {
     assert.equal(res.headers.get("Sunset"), null);
     assert.equal(res.headers.get("Deprecation"), null);
   });
+});
+
+it("bounds the fallback deprecation date by Sunset after the deadline", (t) => {
+  t.mock.timers.enable({
+    apis: ["Date"],
+    now: new Date("2026-10-20T00:00:00Z"),
+  });
+  const headers = new Headers();
+  const sunset = new Date("2026-06-01T00:00:00Z");
+  applyDeprecationHeaders(headers, { sunset });
+  assert.equal(
+    headers.get("Deprecation"),
+    `@${Math.floor(sunset.getTime() / 1000)}`
+  );
+});
+
+it("uses the response time before a future Sunset when no date is configured", (t) => {
+  const now = new Date("2025-01-01T00:00:00Z");
+  t.mock.timers.enable({ apis: ["Date"], now });
+  const headers = new Headers();
+  applyDeprecationHeaders(headers, {
+    sunset: new Date("2026-06-01T00:00:00Z"),
+  });
+  assert.equal(
+    headers.get("Deprecation"),
+    `@${Math.floor(now.getTime() / 1000)}`
+  );
 });

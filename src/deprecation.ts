@@ -10,15 +10,14 @@ export function applyDeprecationHeaders(
   }
 
   // RFC 9745: Deprecation header (Unix timestamp)
-  if (config.deprecatedSince) {
-    const timestamp = Math.floor(config.deprecatedSince.getTime() / 1000);
-    headers.set("Deprecation", `@${timestamp}`);
-  } else {
-    headers.set("Deprecation", "true");
-  }
+  const deprecatedAt =
+    config.deprecatedSince?.getTime() ??
+    Math.min(Date.now(), config.sunset?.getTime() ?? Number.POSITIVE_INFINITY);
+  const timestamp = Math.floor(deprecatedAt / 1000);
+  headers.set("Deprecation", `@${timestamp}`);
 
   // RFC 8594: Link header
   if (config.link) {
-    headers.set("Link", `<${config.link}>; rel="deprecation"`);
+    headers.append("Link", `<${config.link}>; rel="deprecation"`);
   }
 }
