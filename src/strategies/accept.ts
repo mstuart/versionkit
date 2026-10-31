@@ -42,8 +42,8 @@ function extractMediaVersion(mediaType: string): string | null {
   if (!MEDIA_TOKEN_PATTERN.test(subtype)) {
     return null;
   }
-  const lastSuffix = subtype.lastIndexOf("+");
-  const versionMarker = subtype.toLowerCase().lastIndexOf(".v", lastSuffix);
+  // Later .v segments belong to the existing version identifier.
+  const versionMarker = subtype.toLowerCase().indexOf(".v");
   const suffix = subtype.indexOf("+", versionMarker + 2);
   if (
     versionMarker < 1 ||

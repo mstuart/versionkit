@@ -55,3 +55,19 @@ it("preserves existing mixed-case version identifiers", () => {
   });
   assert.equal(extractFromAccept(req), "vBeta");
 });
+
+it("preserves dotted version identifiers when dispatching", async () => {
+  const { createVersionRouter } = await import("../src/router.js");
+  const router = createVersionRouter({
+    strategy: "accept",
+    versions: { "v1.preview.v2": {}, v2: {} },
+  });
+  router.handle("v1.preview.v2", () => new Response("legacy version"));
+  router.handle("v2", () => new Response("wrong version"));
+  const response = await router.middleware()(
+    new Request("http://localhost", {
+      headers: { Accept: "application/vnd.api.v1.preview.v2+json" },
+    })
+  );
+  assert.equal(await response.text(), "legacy version");
+});
